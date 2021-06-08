@@ -1,0 +1,60 @@
+# 参考：https://qiita.com/uhooi/items/16a870eaae24b46103fb
+# プロジェクト名（Foo.xcodeprojのようになる）
+name: XcodeGen-Demo
+
+options:
+  # bundleIdのprefixになる
+  bundleIdPrefix: com.kazua
+  developmentLanguage: ja # defaultはen
+  developmentTarget:
+    iOS: 13.0
+  #xcodeVersion: # Xcodeのバージョン指定
+
+# 全ターゲット共通の設定
+settings:
+  base:
+    MARKETING_VERSION: 1.0.0 # アプリバージョン
+    CURRENT_PROJECT_VERSION: 1 # BUILD_VERSION
+    # DEVELOPMENT_TEAM: # チーム開発の場合は設定
+
+# Swift Package Manager
+packages:
+  Alamofire:
+    url: https://github.com/Alamofire/Alamofire.git
+    version: 5.4.0
+
+# build target
+targets:
+  XcodeGen-Demo:
+    type: application
+    platform: iOS
+    source:
+      - XcodeGen-Demo
+    settings:
+      base:
+        INFOPLIST_FILE: XcodeGen-Demo/Application/Info.plist
+        DEVELOPMENT_LANGUAGE: jp
+
+    dependencies:
+      - package: Alamofire
+
+    postCompileScripts:
+      - path: ./Scripts/XcodeGen/swiftlint.sh
+        name: Run SwiftLint
+
+# build scheme
+schemes:
+  XcodeGen-Demo:
+    build:
+      targets:
+        XcodeGen-Demo: all
+      run:
+        config: Debug
+      test:
+        config: Debug
+      profile:
+        config: Release
+      analyze:
+        config: Debug
+      archive:
+        config: Release
